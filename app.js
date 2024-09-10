@@ -11,9 +11,10 @@ app.post('/login', async (req, res) => {
 
     let browser;
     try {
-        // Launch the browser in headless mode
+        // Launch the browser with the specified executable path
         browser = await puppeteer.launch({
-            headless: true, // Headless mode
+            headless: true,
+            executablePath: '/usr/bin/google-chrome', // Path to your Chrome executable
             args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
         });
         const page = await browser.newPage();
