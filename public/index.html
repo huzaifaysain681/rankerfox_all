@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rankerfox Login</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+            width: 350px;
+            position: relative;
+        }
+        .login-container h1 {
+            margin-bottom: 25px;
+            font-size: 26px;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+        }
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease-in-out;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+        }
+        .login-container input[type="text"]:focus,
+        .login-container input[type="password"]:focus {
+            border-color: #007bff;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0px 5px 15px rgba(255, 75, 43, 0.4);
+        }
+        .login-container button:hover {
+            background: linear-gradient(135deg, #ff4b2b, #ff416c);
+        }
+        #scrapedPage {
+            display: none;
+        }
+        #loader {
+            display: none;
+            border: 10px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 10px solid #3498db;
+            width: 80px;
+            height: 80px;
+            animation: spin 1.5s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="loader"></div>
+    
+    <div class="login-container" id="loginContainer">
+        <h1>Rankerfox Login</h1>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required />
+            <input type="password" id="password" placeholder="Password" required />
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div id="scrapedPage"></div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+    
+            // Show the loader
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('loginContainer').style.display = 'none';
+    
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+    
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+    
+            const result = await response.json();
+    
+            // Hide the loader
+            document.getElementById('loader').style.display = 'none';
+    
+            if (result.success) {
+                // Redirect to the success page
+                window.location.href = result.redirectUrl;
+            } else {
+                alert('Login failed: ' + result.message);
+                document.getElementById('loginContainer').style.display = 'block';
+            }
+        });
+    </script>
+    
+</body>
+</html>
